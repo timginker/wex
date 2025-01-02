@@ -139,13 +139,13 @@ plot(
 It is also easy to verify the identity between the smoothed and filtered levels obtained from the Kalman filter and the corresponding estimates computed using the weights.
 
 ```{r echo=F}
-cat("\n Smoothed lovel computed using the weights = ",
+cat("\n Smoothed level computed using the weights = ",
     sum(y*as.numeric(wts$WtT),na.rm = T),
     " \n Smoothed level from the Kalman Filter = ",fit_ks$ahatt[50])
 ```
 
 ```{r echo=F}
-cat("\n Filtered lovel computed using the weights = ",
+cat("\n Filtered level computed using the weights = ",
     sum(y*as.numeric(wts$Wt),na.rm = T),
     " \n Filtered level from the Kalman Filter = ",fit_kf$att[50])
 ```

@@ -87,11 +87,11 @@ levels obtained from the Kalman filter and the corresponding estimates
 computed using the weights.
 
     #> 
-    #>  Smoothed lovel computed using the weights =  834.9828  
+    #>  Smoothed level computed using the weights =  834.9828  
     #>  Smoothed level from the Kalman Filter =  834.9828
 
     #> 
-    #>  Filtered lovel computed using the weights =  849.307  
+    #>  Filtered level computed using the weights =  849.307  
     #>  Filtered level from the Kalman Filter =  849.307
 
 ## Example 2:
