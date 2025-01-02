@@ -23,25 +23,29 @@ You can install the development version of wex from
 devtools::install_github("timginker/wex")
 ```
 
-## Example 1: Nile dataset
+## Example 1: Local level model
 
-In this example, we use the dataset to compute the smoothed and filtered
-values of the local level.
+In this example, we fit the local level model to the Nile dataset and
+compute the associated smoothed and filtered values.
 
-Plotting the results:
+The resulting estimates are presented in the plot below:
 
 <img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" /> Now,
-let’s consider the 50th value of the local level
+w.l.o.g., let’s consider the 50th value of the estimated local level
 
 ``` r
 cat("smoothed level[50] = ",mu_T[50])
 #> smoothed level[50] =  834.9828
 ```
 
-It is computed as insert formula here
+It is computed as (insert formula here).
+
+Now, We can compute the weight of each observation using the `wex`
+function, and compare the local level estimates obtained from the
+weighted average of the observed data with the associated estimates
+obtained from the Kalman filter and smoother.
 
 ``` r
-
 wts=wex(Tt=matrix(1),
         Zt=matrix(1),
         HHt = matrix(1385.066),
@@ -50,7 +54,7 @@ wts=wex(Tt=matrix(1),
         t=50)
 ```
 
-We can visualize the weights assigned to each observation
+We can also visualize the weights assigned to each observation:
 
 ``` r
 par(mfrow = c(2, 1),
@@ -63,13 +67,13 @@ plot(
   ylab = "",
   lwd = 1.5,
   type="l",
-  main="filtering weights"
+  main="Filtering weights"
 )
 plot(
   wts$WtT,
   col = "blue",
   xlab = "",
-  ylab = "smoothing weights",
+  ylab = " ",
   lwd = 1.5,
   type="l",
   main="Smoothing weights"

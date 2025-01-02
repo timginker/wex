@@ -30,9 +30,11 @@ You can install the development version of wex from [GitHub](https://github.com/
 devtools::install_github("timginker/wex")
 ```
 
-## Example 1: Nile dataset
+## Example 1: Local level model
 
-In this example, we use the \textbf{Nile} dataset to compute the smoothed and filtered values of the local level.
+In this example, we fit the local level model to the Nile dataset and compute the associated smoothed and filtered values. 
+
+The resulting estimates are presented in the plot below:
 
 ```{r echo=F, eval=T}
 library(FKF)
@@ -43,7 +45,7 @@ y[c(3, 10)] <- NA # NA values can be handled
 
 # Computing smoothed and filtered values of the local level
 fit_kf <- fkf(a0 = y[1], 
-              P0 = matrix(100), # Variance of 'a0'
+              P0 = matrix(100),
               dt = matrix(0),
               ct = matrix(0),
               Tt = matrix(1),
@@ -66,7 +68,7 @@ tsp(mu_T) <- tsp(y)
 
 ```
 
-Plotting the results:
+
 
 ```{r eval=T, echo=F}
 plot.ts(
@@ -88,15 +90,16 @@ legend(
 )
 
 ```
-Now, let's consider the 50th value of the local level
+Now, w.l.o.g., let's consider the 50th value of the estimated local level
 
 ```{r}
 cat("smoothed level[50] = ",mu_T[50])
 ```
-It is computed as insert formula here
+It is computed as (insert formula here).
+
+Now, We can compute the weight of each observation using the `wex` function, and compare the local level estimates obtained from the weighted average of the observed data with the associated estimates obtained from the Kalman filter and smoother.
 
 ```{r}
-
 wts=wex(Tt=matrix(1),
         Zt=matrix(1),
         HHt = matrix(1385.066),
@@ -106,7 +109,7 @@ wts=wex(Tt=matrix(1),
 ```
 
 
-We can visualize the weights assigned to each observation
+We can also visualize the weights assigned to each observation:
 
 ```{r}
 par(mfrow = c(2, 1),
@@ -119,13 +122,13 @@ plot(
   ylab = "",
   lwd = 1.5,
   type="l",
-  main="filtering weights"
+  main="Filtering weights"
 )
 plot(
   wts$WtT,
   col = "blue",
   xlab = "",
-  ylab = "smoothing weights",
+  ylab = " ",
   lwd = 1.5,
   type="l",
   main="Smoothing weights"
