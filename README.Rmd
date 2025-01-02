@@ -1,0 +1,154 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# wex
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+`wex` is an R package designed to compute the exact observation weights for the Kalman filter and smoother using the method described in Koopman and Harvey (2003). Built on top of the FKF package, `wex` enhances the functionality of the existing packages and allows to get further insights from the state space models, as is illustrated in a number of motivating examples below.
+
+
+## Installation
+
+You can install the development version of wex from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("timginker/wex")
+```
+
+## Example 1: Nile dataset
+
+In this example, we use the \textbf{Nile} dataset to compute the smoothed and filtered values of the local level.
+
+```{r echo=F, eval=T}
+library(FKF)
+library(wex)
+data(Nile)
+y <- Nile
+y[c(3, 10)] <- NA # NA values can be handled
+
+# Computing smoothed and filtered values of the local level
+fit_kf <- fkf(a0 = y[1], 
+              P0 = matrix(100), # Variance of 'a0'
+              dt = matrix(0),
+              ct = matrix(0),
+              Tt = matrix(1),
+              Zt = matrix(1),
+              HHt = matrix(1385.066),
+              GGt = matrix(15124.13),
+              yt = t(y))
+
+fit_ks <- fks(fit_kf)
+
+# Filtered values of the local level
+mu_t <- fit_kf$att[1,]
+mu_t <- ts(mu_t)
+tsp(mu_t) <- tsp(y)
+
+# Smoothed values of the local level
+mu_T <- fit_ks$ahatt[1,]
+mu_T <- ts(mu_T)
+tsp(mu_T) <- tsp(y)
+
+```
+
+Plotting the results:
+
+```{r eval=T, echo=F}
+plot.ts(
+  y,
+  col = "darkgrey",
+  xlab = "",
+  ylab = "",
+  lwd = 1.5,
+  main = "Flow of the River Nile and its Estimated Smoothed and Filtered Levels"
+)
+lines(mu_t, col = "black")
+lines(mu_T, col = "blue")
+legend(
+  "bottomleft",
+  legend = c("Flow", "Filtered Level", "Smoothed Level"),
+  lwd = c(2, 1),
+  col = c("darkgrey", "black", "blue"),
+  bty = "n"
+)
+
+```
+Now, let's consider the 50th value of the local level
+
+```{r}
+cat("smoothed level[50] = ",mu_T[50])
+```
+It is computed as insert formula here
+
+```{r}
+
+wts=wex(Tt=matrix(1),
+        Zt=matrix(1),
+        HHt = matrix(1385.066),
+        GGt = matrix(15124.13),
+        yt = t(y),
+        t=50)
+```
+
+
+We can visualize the weights assigned to each observation
+
+```{r}
+par(mfrow = c(2, 1),
+    mar = c(2.2, 2.2, 1, 1),
+    cex = 0.8)
+plot(
+  wts$Wt,
+  col = "darkgrey",
+  xlab = "",
+  ylab = "",
+  lwd = 1.5,
+  type="l",
+  main="filtering weights"
+)
+plot(
+  wts$WtT,
+  col = "blue",
+  xlab = "",
+  ylab = "smoothing weights",
+  lwd = 1.5,
+  type="l",
+  main="Smoothing weights"
+)
+
+```
+
+It is also easy to verify the identity between the smoothed and filtered levels obtained from the Kalman filter and the corresponding estimates computed using the weights.
+
+```{r echo=F}
+cat("\n Smoothed lovel computed using the weights = ",
+    sum(y*as.numeric(wts$WtT),na.rm = T),
+    " \n Smoothed level from the Kalman Filter = ",fit_ks$ahatt[50])
+```
+
+```{r echo=F}
+cat("\n Filtered lovel computed using the weights = ",
+    sum(y*as.numeric(wts$Wt),na.rm = T),
+    " \n Filtered level from the Kalman Filter = ",fit_kf$att[50])
+```
+
+## Example 2:
+
+
+
+
