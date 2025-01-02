@@ -1,17 +1,18 @@
 Package: wex
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Compute the Exact Observation Weights for the 
+    Kalman Filter and Smoother.
 Version: 0.1.0
 Authors@R: c(
     person(
-      "Jane", "Doe",
-      email = "jane@example.com",
+      "Tim", "Ginker",
+      email = "timginker@gmail.com.com",
       role = c("aut", "cre")
     )
   )
-Description: More about what it does (maybe more than one line).
-    Continuation lines should be indented.
-License: What license is it under?
+Description: Compute the exact observation weights for the 
+    Kalman filter and smoother using the method described in Koopman and Harvey (2003). 
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 URL: https://github.com/timginker/wex
