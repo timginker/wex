@@ -20,16 +20,23 @@ wex(Tt, Zt, HHt, GGt, yt, t)
 \item{t}{An observation index for which the weights are returned.}
 }
 \value{
-weight matrices for filtering and smoothing.
+Weight matrices for filtering and smoothing.
 }
 \description{
-The function computes exact observation weights for the Kalman filter and smoother,
-as described in Koopman and Harvey (2003). 'wex' was built upon the existing 'FKF' package.
+This function computes the exact observation weights for the Kalman filter and smoother,
+as described by Koopman and Harvey (2003). The implementation of \code{wex} builds upon the
+existing \code{FKF} package(see: https://CRAN.R-project.org/package=FKF).
 }
 \details{
 \strong{State space form}
+
+\deqn{\alpha_{t+1} = T_t \alpha_t + H_t \eta_t,}
+\deqn{y_t = Z_t \alpha_t + G_t \epsilon_t,}
+
+where \eqn{y_t} represents the observed data (possibly with NA's),
+and \eqn{\alpha_t} is the state vector.
 }
 \references{
 Koopman, S. J., & Harvey, A. (2003). Computing observation weights for
- signal extraction and filtering. \emph{Journal of Economic Dynamics and Control}, \bold{27}(7), 1317-1333.
+signal extraction and filtering. \emph{Journal of Economic Dynamics and Control}, \bold{27}(7), 1317-1333.
 }

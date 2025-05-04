@@ -1,7 +1,8 @@
 #' Exact observation weights for the Kalman filter and smoother.
 #'
-#' The function computes exact observation weights for the Kalman filter and smoother,
-#' as described in Koopman and Harvey (2003). 'wex' was built upon the existing 'FKF' package.
+#' This function computes the exact observation weights for the Kalman filter and smoother,
+#' as described by Koopman and Harvey (2003). The implementation of \code{wex} builds upon the
+#' existing \code{FKF} package(see: https://CRAN.R-project.org/package=FKF).
 #'
 #' @param Tt An \code{array} giving the factor of the transition equation (see \bold{Details}).
 #' @param Zt An \code{array} giving the factor of the measurement equation (see \bold{Details}).
@@ -12,7 +13,7 @@
 #'
 #' @import FKF
 #'
-#' @returns weight matrices for filtering and smoothing.
+#' @returns Weight matrices for filtering and smoothing.
 #'
 #'
 #' @references Koopman, S. J., & Harvey, A. (2003). Computing observation weights for
@@ -26,8 +27,11 @@
 #'
 #' \strong{State space form}
 #'
+#' \deqn{\alpha_{t+1} = T_t \alpha_t + H_t \eta_t,}
+#' \deqn{y_t = Z_t \alpha_t + G_t \epsilon_t,}
 #'
-#'
+#' where \eqn{y_t} represents the observed data (possibly with NA's),
+#' and \eqn{\alpha_t} is the state vector.
 #'
 #'
 #'
@@ -43,7 +47,7 @@ wex<-function(Tt,
 
   if(is.null(dim(yt))){
     dim_y=1
-    n_y=length(y)
+    n_y=length(yt)
   }else{
     dim_y=dim(yt)[1]
     n_y=dim(yt)[2]

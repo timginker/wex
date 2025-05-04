@@ -1,7 +1,7 @@
 Package: wex
 Type: Package
 Title: Compute the Exact Observation Weights for the 
-    Kalman Filter and Smoother.
+    Kalman Filter and Smoother
 Version: 0.1.0
 Authors@R: c(
     person(
@@ -11,9 +11,12 @@ Authors@R: c(
     )
   )
 Description: Compute the exact observation weights for the 
-    Kalman filter and smoother using the method described in Koopman and Harvey (2003). 
+    Kalman filter and smoother using the method described in Koopman and Harvey (2003) <doi.org/10.1016/S0165-1889(02)00061-1>. 
 License: MIT + file LICENSE
 Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+Imports: 
+  FKF
 LazyData: true
 URL: https://github.com/timginker/wex
 BugReports: https://github.com/timginker/wex/issues

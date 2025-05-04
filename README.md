@@ -25,8 +25,8 @@ devtools::install_github("timginker/wex")
 
 ## Example 1: Local level model
 
-In this example, we fit the local level model to the Nile dataset and
-compute the associated smoothed and filtered values.
+In this illustrative example, we fit the local level model to the Nile
+dataset and compute the associated smoothed and filtered values.
 
 The resulting estimates are presented in the plot below:
 
@@ -38,7 +38,13 @@ cat("smoothed level[50] = ",mu_T[50])
 #> smoothed level[50] =  834.9828
 ```
 
-It is computed as (insert formula here).
+Koopman and Harvey (2003) showed that the smoothed estimates can be
+represented as:
+$$\alpha _{t|T}=\sum_{j=1}^{T}w_{j}(\alpha _{t|T})y_{j}$$.
+
+Similarly, the filtered estimated can be computed as:
+
+$$\alpha _{t|t}=\sum_{j=1}^{t}w_{j}(\alpha _{t|Tt})y_{j}$$.
 
 Now, We can compute the weight of each observation using the `wex`
 function, and compare the local level estimates obtained from the
@@ -95,3 +101,5 @@ computed using the weights.
     #>  Filtered level from the Kalman Filter =  849.307
 
 ## Example 2:
+
+Here, we use the quarterly UK gas consumption data to show

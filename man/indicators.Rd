@@ -8,17 +8,17 @@
 A data frame with 263 rows and 11 variables:
 
 \describe{
-  \item{date}{Date values (format: YYYY-MM-DD)}
-  \item{total_production}{Total industrial production in Israel}
-  \item{retail_revenue}{Trade revenue}
-  \item{services_revenue}{Service revenue}
-  \item{employment}{Employment (excluding absent workers)}
-  \item{export_services}{Exports of services}
-  \item{building_starts}{Building starts}
-  \item{import_consumer_goods}{Imports of consumer goods}
-  \item{import_production_inputs}{Imports of production inputs}
-  \item{export_goods}{Exports of goods}
-  \item{job_openings}{Job openings}
+\item{date}{Date values (format: YYYY-MM-DD)}
+\item{total_production}{Total industrial production in Israel}
+\item{retail_revenue}{Trade revenue}
+\item{services_revenue}{Service revenue}
+\item{employment}{Employment (excluding absent workers)}
+\item{export_services}{Exports of services}
+\item{building_starts}{Building starts}
+\item{import_consumer_goods}{Imports of consumer goods}
+\item{import_production_inputs}{Imports of production inputs}
+\item{export_goods}{Exports of goods}
+\item{job_openings}{Job openings}
 }
 }
 \source{
