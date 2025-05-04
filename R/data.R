@@ -1,15 +1,15 @@
-#' Sample data with 10 economic indicators
+#' Sample Data with 10 Economic Indicators
 #'
-#' A dataset containing 10 monthly economic indicators. All variables are log-differenced, if necessary, to achieve stationarity.
+#' A dataset containing 10 monthly economic indicators, covering the period from January 2000 to November 2021. All variables have been log-differenced, when necessary, to achieve stationarity.
 #'
 #' @format A data frame with 263 rows and 11 variables:
 #'
 #' \describe{
-#'   \item{date}{Dates}
-#'   \item{total_production}{Industrial production in Israel - total}
-#'   \item{retail_revenue}{Revenue in Trade}
-#'   \item{services_revenue}{Revenue in Services}
-#'   \item{employment}{Employment excluding absent workers}
+#'   \item{date}{Date values (format: YYYY-MM-DD)}
+#'   \item{total_production}{Total industrial production in Israel}
+#'   \item{retail_revenue}{Trade revenue}
+#'   \item{services_revenue}{Service revenue}
+#'   \item{employment}{Employment (excluding absent workers)}
 #'   \item{export_services}{Exports of services}
 #'   \item{building_starts}{Building starts}
 #'   \item{import_consumer_goods}{Imports of consumer goods}
