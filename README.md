@@ -33,10 +33,7 @@ dataset and compute the associated smoothed and filtered values.
 The resulting estimates are presented in the plot below:
 
 <img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" /> Now,
-w.l.o.g., let’s consider the 50th value of the estimated local level
-
-    #> smoothed level[50] =  834.9828
-
+w.l.o.g., let’s consider the 50th value of the estimated local level.
 Koopman and Harvey (2003) showed that the smoothed estimates can be
 represented as:
 
@@ -54,10 +51,10 @@ $$
 $$
 ```
 
-Now, We can compute the weight of each observation using the `wex`
-function, and compare the local level estimates obtained from the
-weighted average of the observed data with the associated estimates
-obtained from the Kalman filter and smoother.
+We can compute the weight of each observation using the `wex` function,
+and compare the local level estimates obtained from the weighted average
+of the observed data with the associated estimates obtained from the
+Kalman filter and smoother.
 
 ``` r
 wts=wex(Tt=matrix(1),
@@ -94,7 +91,7 @@ plot(
 )
 ```
 
-<img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
 
 It is also easy to verify the identity between the smoothed and filtered
 levels obtained from the Kalman filter and the corresponding estimates
@@ -161,7 +158,7 @@ follows an AR(1) process.
 
 The normalized data series are summarized in the plot below:
 
-<img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
 
 Below, we use the `wex` function to decompose the last value of the
 latent factor into a contribution of each variable.

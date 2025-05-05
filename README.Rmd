@@ -94,12 +94,7 @@ legend(
 )
 
 ```
-Now, w.l.o.g., let's consider the 50th value of the estimated local level
-
-```{r echo=F, eval=T}
-cat("smoothed level[50] = ",mu_T[50])
-```
-Koopman and Harvey (2003) showed that the smoothed estimates can be represented as:
+Now, w.l.o.g., let's consider the 50th value of the estimated local level. Koopman and Harvey (2003) showed that the smoothed estimates can be represented as:
 
 ```math
 $$
@@ -116,7 +111,7 @@ $$
 ```
 
 
-Now, We can compute the weight of each observation using the `wex` function, and compare the local level estimates obtained from the weighted average of the observed data with the associated estimates obtained from the Kalman filter and smoother.
+We can compute the weight of each observation using the `wex` function, and compare the local level estimates obtained from the weighted average of the observed data with the associated estimates obtained from the Kalman filter and smoother.
 
 ```{r}
 wts=wex(Tt=matrix(1),
