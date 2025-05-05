@@ -57,7 +57,7 @@ of the observed data with the associated estimates obtained from the
 Kalman filter and smoother.
 
 ``` r
-wts=wex(Tt=matrix(1),
+wts <- wex(Tt=matrix(1),
         Zt=matrix(1),
         HHt = matrix(1385.066),
         GGt = matrix(15124.13),

@@ -114,7 +114,7 @@ $$
 We can compute the weight of each observation using the `wex` function, and compare the local level estimates obtained from the weighted average of the observed data with the associated estimates obtained from the Kalman filter and smoother.
 
 ```{r}
-wts=wex(Tt=matrix(1),
+wts <- wex(Tt=matrix(1),
         Zt=matrix(1),
         HHt = matrix(1385.066),
         GGt = matrix(15124.13),

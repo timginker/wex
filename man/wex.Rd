@@ -40,6 +40,23 @@ existing \code{FKF} package (see: https://CRAN.R-project.org/package=FKF).
 where \eqn{y_t} represents the observed data (possibly with NA's),
 and \eqn{\alpha_t} is the state vector.
 }
+\examples{
+
+# Decompose a local level model (Nile data set)
+data(Nile)
+y <- Nile
+wts <- wex(Tt=matrix(1),
+Zt=matrix(1),
+HHt = matrix(1385.066),
+GGt = matrix(15124.13),
+yt = t(y),
+t=50)
+
+
+
+
+
+}
 \references{
 Koopman, S. J., & Harvey, A. (2003). Computing observation weights for
 signal extraction and filtering. \emph{Journal of Economic Dynamics and Control}, \bold{27}(7), 1317-1333.

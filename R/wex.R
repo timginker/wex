@@ -35,6 +35,17 @@
 #' where \eqn{y_t} represents the observed data (possibly with NA's),
 #' and \eqn{\alpha_t} is the state vector.
 #'
+#' @examples
+#'
+#' # Decompose a local level model (Nile data set)
+#' data(Nile)
+#' y <- Nile
+#' wts <- wex(Tt=matrix(1),
+#' Zt=matrix(1),
+#' HHt = matrix(1385.066),
+#' GGt = matrix(15124.13),
+#' yt = t(y),
+#' t=50)
 #'
 #'
 #'

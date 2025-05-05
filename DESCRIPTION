@@ -7,7 +7,7 @@ Authors@R: c(
     person(
       "Tim", "Ginker",
       email = "timginker@gmail.com.com",
-      role = c("aut", "cre")
+      role = c("aut", "cre","cph")
     )
   )
 Description: Compute the exact observation weights for the 
