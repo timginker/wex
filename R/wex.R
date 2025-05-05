@@ -80,7 +80,7 @@ wex<-function(Tt,
 
       data1[s,col]<-1
       # restoring NAs
-      data1[is.na(yt)]<-NA
+      data1[is.na(t(yt))]<-NA
 
       # Kalman Filter
       kfw<-FKF::fkf(rep(0,dim(Tt)[1]),
