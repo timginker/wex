@@ -44,9 +44,11 @@ $$
 \alpha _{t|T}=\sum_{j=1}^{T}w_{j}(\alpha _{t|T})y_{j}.
 $$ Similarly, the filtered estimated can be computed as:
 
+``` math
 $$
 \alpha _{t|t}=\sum_{j=1}^{t}w_{j}(\alpha _{t|Tt})y_{j}.
 $$
+```
 
 Now, We can compute the weight of each observation using the `wex`
 function, and compare the local level estimates obtained from the
