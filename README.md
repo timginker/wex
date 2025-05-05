@@ -40,9 +40,13 @@ w.l.o.g., let’s consider the 50th value of the estimated local level
 Koopman and Harvey (2003) showed that the smoothed estimates can be
 represented as:
 
+``` math
 $$
 \alpha _{t|T}=\sum_{j=1}^{T}w_{j}(\alpha _{t|T})y_{j}.
-$$ Similarly, the filtered estimated can be computed as:
+$$
+```
+
+Similarly, the filtered estimated can be computed as:
 
 ``` math
 $$
@@ -127,17 +131,25 @@ model (DFM) assumes that it is possible to decompose $x_{t}$ into two
 unobserved orthogonal components representing common and idiosyncratic
 factors. The model is specified as follows:
 
+``` math
 $$
 x_{t}=\Lambda F_{t}+\varepsilon_{t}, \hspace{2pt} \varepsilon_{t}\sim N(0,R),
-$$ where $F_{t}$ is an $(r \times 1)$ vector of unobserved common
-factors, $\Lambda$ is an $(n \times r)$ matrix of their loadings, and
+$$
+```
+
+where $F_{t}$ is an $(r \times 1)$ vector of unobserved common factors,
+$\Lambda$ is an $(n \times r)$ matrix of their loadings, and
 $\varepsilon_{t}$ is an $(n \times 1)$ vector of the idiosyncratic
 components. The factors are assumed to have the following stationary
 VAR(p) representation:
 
+``` math
 $$
 F_{t}=\sum_{s=1}^{p}\Phi _{s}F_{t-s}+u_{t},\hspace{2pt} u_{t}\sim N(0,Q)
-$$ where $\Phi_{s}$ are $(r \times r)$ matrices of autoregressive
+$$
+```
+
+where $\Phi_{s}$ are $(r \times r)$ matrices of autoregressive
 coefficients. The related inference and forecast procedures can be
 carried out using the standard Kalman filter techniques.
 
