@@ -99,10 +99,11 @@ Now, w.l.o.g., let's consider the 50th value of the estimated local level
 ```{r echo=F, eval=T}
 cat("smoothed level[50] = ",mu_T[50])
 ```
-Koopman and Harvey (2003) showed that the smoothed estimates can be represented as: $$
+Koopman and Harvey (2003) showed that the smoothed estimates can be represented as:
+
+$$
 \alpha _{t|T}=\sum_{j=1}^{T}w_{j}(\alpha _{t|T})y_{j}.
 $$
-
 Similarly, the filtered estimated can be computed as:
 
 $$

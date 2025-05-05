@@ -38,11 +38,11 @@ w.l.o.g., let’s consider the 50th value of the estimated local level
     #> smoothed level[50] =  834.9828
 
 Koopman and Harvey (2003) showed that the smoothed estimates can be
-represented as: $$
-\alpha _{t|T}=\sum_{j=1}^{T}w_{j}(\alpha _{t|T})y_{j}.
-$$
+represented as:
 
-Similarly, the filtered estimated can be computed as:
+$$
+\alpha _{t|T}=\sum_{j=1}^{T}w_{j}(\alpha _{t|T})y_{j}.
+$$ Similarly, the filtered estimated can be computed as:
 
 $$
 \alpha _{t|t}=\sum_{j=1}^{t}w_{j}(\alpha _{t|Tt})y_{j}.
