@@ -4,9 +4,13 @@
 \alias{wex}
 \title{Exact observation weights for the Kalman filter and smoother.}
 \usage{
-wex(Tt, Zt, HHt, GGt, yt, t)
+wex(a0 = NULL, P0 = NULL, Tt, Zt, HHt, GGt, yt, t)
 }
 \arguments{
+\item{a0}{A \code{vector} giving the initial value/estimation of the state variable. By default is set to zero.}
+
+\item{P0}{A \code{matrix} giving the variance of a0. By default is a diagonal matrix of 10^6.}
+
 \item{Tt}{An \code{array} giving the factor of the transition equation (see \bold{Details}).}
 
 \item{Zt}{An \code{array} giving the factor of the measurement equation (see \bold{Details}).}
@@ -20,12 +24,12 @@ wex(Tt, Zt, HHt, GGt, yt, t)
 \item{t}{An observation index for which the weights are returned.}
 }
 \value{
-Weight matrices for filtering and smoothing.
+Weight matrices for filtering (Wt) and smoothing (WtT).
 }
 \description{
 This function computes the exact observation weights for the Kalman filter and smoother,
 as described by Koopman and Harvey (2003). The implementation of \code{wex} builds upon the
-existing \code{FKF} package(see: https://CRAN.R-project.org/package=FKF).
+existing \code{FKF} package (see: https://CRAN.R-project.org/package=FKF).
 }
 \details{
 \strong{State space form}

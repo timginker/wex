@@ -2,8 +2,10 @@
 #'
 #' This function computes the exact observation weights for the Kalman filter and smoother,
 #' as described by Koopman and Harvey (2003). The implementation of \code{wex} builds upon the
-#' existing \code{FKF} package(see: https://CRAN.R-project.org/package=FKF).
+#' existing \code{FKF} package (see: https://CRAN.R-project.org/package=FKF).
 #'
+#' @param a0 A \code{vector} giving the initial value/estimation of the state variable. By default is set to zero.
+#' @param P0 A \code{matrix} giving the variance of a0. By default is a diagonal matrix of 10^6.
 #' @param Tt An \code{array} giving the factor of the transition equation (see \bold{Details}).
 #' @param Zt An \code{array} giving the factor of the measurement equation (see \bold{Details}).
 #' @param HHt An \code{array} giving the variance of the innovations of the transition equation (see \bold{Details}).
@@ -13,7 +15,7 @@
 #'
 #' @import FKF
 #'
-#' @returns Weight matrices for filtering and smoothing.
+#' @returns Weight matrices for filtering (Wt) and smoothing (WtT).
 #'
 #'
 #' @references Koopman, S. J., & Harvey, A. (2003). Computing observation weights for
@@ -38,7 +40,9 @@
 #'
 #'
 #'
-wex<-function(Tt,
+wex<-function(a0=NULL,
+              P0=NULL,
+              Tt,
               Zt,
               HHt,
               GGt,
@@ -66,6 +70,17 @@ wex<-function(Tt,
             dim=c(dim(Tt)[1],
                   dim_y,
                   n_y))
+  # Set a0 and P0
+
+  if(is.null(a0)){
+
+    a0=rep(0,dim(Tt)[1])
+  }
+
+  if(is.null(P0)){
+
+    P0=diag(10^6,dim(Tt)[1])
+  }
 
   # computing observation weights for a given period
 
@@ -83,8 +98,8 @@ wex<-function(Tt,
       data1[is.na(t(yt))]<-NA
 
       # Kalman Filter
-      kfw<-FKF::fkf(rep(0,dim(Tt)[1]),
-              diag(10^6,dim(Tt)[1]),
+      kfw<-FKF::fkf(a0,
+              P0,
               rep(0,dim(Tt)[1]),
               rep(0,dim_y),
               Tt,
