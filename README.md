@@ -153,8 +153,6 @@ where $\Phi_{s}$ are $(r \times r)$ matrices of autoregressive
 coefficients. The related inference and forecast procedures can be
 carried out using the standard Kalman filter techniques.
 
-Here’s a slightly revised version for improved grammar and coherence:
-
 In this illustrative example, we use a dataset containing 10 monthly
 economic indicators covering the period from January 2000 to November
 2021. All variables have been log-differenced, when necessary, to
