@@ -164,7 +164,7 @@ cat("\n Filtered level computed using the weights = ",
     " \n Filtered level from the Kalman Filter = ",fit_kf$att[50])
 ```
 
-## Example 2:
+## Example 2: Computing Variable Contribution in a Dynamic Factor Model
 
 In this example we show how to compute observation weights for a Dynamic Factor Model (DFM) which are then used to decompose the latent factor into the contribution of each variable.
 
