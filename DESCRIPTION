@@ -6,10 +6,12 @@ Version: 0.1.0
 Authors@R: c(
     person(
       "Tim", "Ginker",
-      email = "timginker@gmail.com.com",
-      role = c("aut", "cre","cph")
+      email = "timginker@gmail.com",
+      role = c("aut", "cre","cph"),
+      comment = c(ORCID = "0000-0002-7138-5417")
     )
   )
+Maintainer: Tim Ginker <timginker@gmail.com>    
 Description: Compute the exact observation weights for the 
     Kalman filter and smoother using the method described in Koopman and Harvey (2003) <www.sciencedirect.com/science/article/pii/S0165188902000611>. 
 License: MIT + file LICENSE
