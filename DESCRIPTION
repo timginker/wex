@@ -24,4 +24,4 @@ Imports:
 LazyData: true
 URL: https://github.com/timginker/wex
 BugReports: https://github.com/timginker/wex/issues
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3

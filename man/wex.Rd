@@ -19,7 +19,7 @@ wex(a0 = NULL, P0 = NULL, Tt, Zt, HHt, GGt, yt, t)
 
 \item{GGt}{An \code{array} giving the variance of the disturbances of the measurement equation (see \bold{Details}).}
 
-\item{yt}{An \eqn{n \times d}{n * d} matrix, where d is the dimension and n is the number of observations. \code{matrix} containing the observations. “NA”-values are allowed (see \bold{Details}).}
+\item{yt}{An \eqn{d \times n}{d * n} matrix, where d is the dimension and n is the number of observations. \code{matrix} containing the observations. “NA”-values are allowed (see \bold{Details}).}
 
 \item{t}{An observation index for which the weights are returned.}
 }

@@ -10,7 +10,7 @@
 #' @param Zt An \code{array} giving the factor of the measurement equation (see \bold{Details}).
 #' @param HHt An \code{array} giving the variance of the innovations of the transition equation (see \bold{Details}).
 #' @param GGt An \code{array} giving the variance of the disturbances of the measurement equation (see \bold{Details}).
-#' @param yt An \eqn{n \times d}{n * d} matrix, where d is the dimension and n is the number of observations. \code{matrix} containing the observations. “NA”-values are allowed (see \bold{Details}).
+#' @param yt An \eqn{d \times n}{d * n} matrix, where d is the dimension and n is the number of observations. \code{matrix} containing the observations. “NA”-values are allowed (see \bold{Details}).
 #' @param t An observation index for which the weights are returned.
 #'
 #' @import FKF
