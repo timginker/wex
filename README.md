@@ -4,6 +4,7 @@
 # wex
 
 <!-- badges: start -->
+
 <!-- badges: end -->
 
 `wex` is an R package designed to compute the exact observation weights
@@ -37,19 +38,15 @@ w.l.o.g., let’s consider the 50th value of the estimated local level.
 Koopman and Harvey (2003) showed that the smoothed estimates can be
 represented as:
 
-``` math
 $$
 \alpha _{t|T}=\sum_{j=1}^{T}w_{j}(\alpha _{t|T})y_{j}.
 $$
-```
 
 Similarly, the filtered estimated can be computed as:
 
-``` math
 $$
-\alpha _{t|t}=\sum_{j=1}^{t}w_{j}(\alpha _{t|Tt})y_{j}.
+\alpha _{t|t}=\sum_{j=1}^{t}w_{j}(\alpha _{t|t})y_{j}.
 $$
-```
 
 We can compute the weight of each observation using the `wex` function,
 and compare the local level estimates obtained from the weighted average
@@ -128,11 +125,9 @@ model (DFM) assumes that it is possible to decompose $x_{t}$ into two
 unobserved orthogonal components representing common and idiosyncratic
 factors. The model is specified as follows:
 
-``` math
 $$
 x_{t}=\Lambda F_{t}+\varepsilon_{t}, \hspace{2pt} \varepsilon_{t}\sim N(0,R),
 $$
-```
 
 where $F_{t}$ is an $(r \times 1)$ vector of unobserved common factors,
 $\Lambda$ is an $(n \times r)$ matrix of their loadings, and
@@ -140,11 +135,9 @@ $\varepsilon_{t}$ is an $(n \times 1)$ vector of the idiosyncratic
 components. The factors are assumed to have the following stationary
 VAR(p) representation:
 
-``` math
 $$
 F_{t}=\sum_{s=1}^{p}\Phi _{s}F_{t-s}+u_{t},\hspace{2pt} u_{t}\sim N(0,Q)
 $$
-```
 
 where $\Phi_{s}$ are $(r \times r)$ matrices of autoregressive
 coefficients. The related inference and forecast procedures can be
@@ -215,109 +208,188 @@ contributions <- colSums(ctr,na.rm=T)
 The contributons are summarized in the Table below:
 
 <table class=" lightable-classic" style="font-family: Cambria; width: auto !important; margin-left: auto; margin-right: auto;">
+
 <caption>
+
 Varibale Contributions
 </caption>
+
 <thead>
+
 <tr>
+
 <th style="text-align:left;">
+
 Variable
 </th>
+
 <th style="text-align:right;">
+
 Contribution
 </th>
+
 </tr>
+
 </thead>
+
 <tbody>
+
 <tr>
+
 <td style="text-align:left;">
+
 Total industrial production in Israel
 </td>
+
 <td style="text-align:right;">
+
 0.044
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:left;">
+
 Trade revenue
 </td>
+
 <td style="text-align:right;">
+
 0.065
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:left;">
+
 Service revenue
 </td>
+
 <td style="text-align:right;">
+
 -0.023
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:left;">
+
 Employment (excluding absent workers)
 </td>
+
 <td style="text-align:right;">
+
 0.060
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:left;">
+
 Exports of services
 </td>
+
 <td style="text-align:right;">
+
 0.010
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:left;">
+
 Building starts
 </td>
+
 <td style="text-align:right;">
+
 0.001
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:left;">
+
 Imports of consumer goods
 </td>
+
 <td style="text-align:right;">
+
 0.019
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:left;">
+
 Imports of production inputs
 </td>
+
 <td style="text-align:right;">
+
 0.010
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:left;">
+
 Exports of goods
 </td>
+
 <td style="text-align:right;">
+
 0.003
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:left;">
+
 Job openings
 </td>
+
 <td style="text-align:right;">
+
 -0.002
 </td>
+
 </tr>
+
 <tr>
+
 <td style="text-align:left;">
+
 Total
 </td>
+
 <td style="text-align:right;">
+
 0.188
 </td>
+
 </tr>
+
 </tbody>
+
 </table>
 
 # References
