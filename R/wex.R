@@ -20,7 +20,7 @@
 #'
 #' @references Koopman, S. J., & Harvey, A. (2003). Computing observation weights for
 #'  signal extraction and filtering. \emph{Journal of Economic Dynamics and Control}, \bold{27}(7), 1317-1333.
-#'
+#' @author Tim Ginker
 #'
 #'
 #' @export
