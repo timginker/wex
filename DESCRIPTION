@@ -20,7 +20,8 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 Imports: 
-  FKF
+  FKF,
+  KFAS
 LazyData: true
 URL: https://github.com/timginker/wex
 BugReports: https://github.com/timginker/wex/issues
