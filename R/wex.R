@@ -1,25 +1,42 @@
-#' Exact observation weights for the Kalman filter and smoother.
+#' Exact observation weights for the Kalman filter and smoother
 #'
-#' This function computes the exact observation weights for the Kalman filter and smoother,
-#' as described by Koopman and Harvey (2003). The implementation of \code{wex} builds upon the
-#' existing \code{FKF} package (see: https://CRAN.R-project.org/package=FKF).
+#' Computes the exact observation weights for the Kalman filter and smoother,
+#' following Koopman and Harvey (2003). The implementation in \code{wex}
+#' builds on the functionality provided by the \code{FKF} and \code{KFAS}
+#' packages. These packages rely on different computational approaches:
+#' \code{FKF} uses routines from BLAS and LAPACK, whereas \code{KFAS} uses
+#' sequential processing, which allows the prediction error variance matrices
+#' to be singular.
 #'
-#' @param a0 A \code{vector} giving the initial value/estimation of the state variable. By default is set to zero.
-#' @param P0 A \code{matrix} giving the variance of a0. By default is a diagonal matrix of 10^6.
-#' @param Tt An \code{array} giving the factor of the transition equation (see \bold{Details}).
-#' @param Zt An \code{array} giving the factor of the measurement equation (see \bold{Details}).
-#' @param HHt An \code{array} giving the variance of the innovations of the transition equation (see \bold{Details}).
-#' @param GGt An \code{array} giving the variance of the disturbances of the measurement equation (see \bold{Details}).
-#' @param yt An \eqn{d \times n}{d * n} matrix, where d is the dimension and n is the number of observations. \code{matrix} containing the observations. “NA”-values are allowed (see \bold{Details}).
-#' @param t An observation index for which the weights are returned.
+#' @param a0 A numeric vector specifying the initial state estimate. Defaults to a vector of zeros.
+#' @param P0 A numeric matrix specifying the covariance matrix of the initial state. Defaults to a diagonal matrix with large values (e.g., 1e6) on the diagonal.
+#' @param Tt An array specifying the transition matrix of the state equation (see \bold{Details}).
+#' @param Zt Zt An array specifying the observation matrix of the measurement equation (see \bold{Details}).
+#' @param HHt HHt An array specifying the covariance matrix of the state disturbances (see \bold{Details}).
+#' @param GGt An array specifying the covariance matrix of the observation disturbances (see \bold{Details}).
+#' @param yt An \eqn{d \times n}{d * n} matrix of observations, where d is the dimension and n is the number of observations.  Missing values (\code{NA}) are allowed.
+#' @param t  An integer specifying the time index at which the observation weights are evaluated.
+#' @param package A character string indicating which backend to use (\code{"FKF"} or \code{"KFAS"}). Defaults to \code{"FKF"}.
 #'
-#' @import FKF
+#' @importFrom FKF fkf fks
+#' @importFrom KFAS KFS SSModel SSMcustom
 #'
-#' @returns Weight matrices for filtering (Wt) and smoothing (WtT).
+#' @returns A list with two components:
+#' \describe{
+#'   \item{\code{Wt}}{An array of filtering weights with dimensions
+#'   \eqn{m \times d \times n}{m x d x n}, where \eqn{m} is the state
+#'   dimension, \eqn{d} is the observation dimension, and \eqn{n} is the
+#'   number of time points.}
+#'   \item{\code{WtT}}{An array of smoothing weights with dimensions
+#'   \eqn{m \times d \times n}{m x d x n}.}
+#' }
 #'
 #'
 #' @references Koopman, S. J., & Harvey, A. (2003). Computing observation weights for
 #'  signal extraction and filtering. \emph{Journal of Economic Dynamics and Control}, \bold{27}(7), 1317-1333.
+#'
+#'  Helske, J. (2017). KFAS: Exponential family state space models in R. \emph{Journal of Statistical Software}, \bold{78}, 1-39.
+#'
 #' @author Tim Ginker
 #'
 #'
@@ -58,73 +75,111 @@ wex<-function(a0=NULL,
               HHt,
               GGt,
               yt,
-              t){
+              t,
+              package = "FKF"){
 
-  if(is.null(dim(yt))){
-    dim_y=1
-    n_y=length(yt)
-  }else{
-    dim_y=dim(yt)[1]
-    n_y=dim(yt)[2]
+
+  package <- match.arg(package, choices = c("FKF", "KFAS"))
+
+  # Matching dimensions
+
+  if (is.null(dim(yt))) {
+    yt <- matrix(yt, nrow = 1)
   }
 
-  # empty weights container for filtering
-  Wt<-array(matrix(0,nrow=dim(Tt)[1],
-                  ncol=dim_y),
-           dim=c(dim(Tt)[1],
-                 dim_y,
-                 n_y))
+  dim_y <- nrow(yt)
+  n_y   <- ncol(yt)
+  m     <- dim(Tt)[1]
 
-  # empty weights container for smoothing
-  WtT<-array(matrix(0,nrow=dim(Tt)[1],
-                   ncol=dim_y),
-            dim=c(dim(Tt)[1],
-                  dim_y,
-                  n_y))
-  # Set a0 and P0
+  # Setting a0 and P0
 
-  if(is.null(a0)){
-
-    a0=rep(0,dim(Tt)[1])
+  if (is.null(a0)) {
+    a0 <- rep(0, m)
   }
 
-  if(is.null(P0)){
-
-    P0=diag(10^6,dim(Tt)[1])
+  if (is.null(P0)) {
+    P0 <- diag(1e6, m)
   }
+
+  # Integrity checks
+
+  if (!is.numeric(a0) || length(a0) != m) {
+    stop("`a0` must be a numeric vector of length equal to the state dimension.")
+  }
+
+  if (!is.matrix(P0) || any(dim(P0) != c(m, m))) {
+    stop("`P0` must be an m x m numeric matrix, where m is the state dimension.")
+  }
+
+  if (!is.numeric(t) || length(t) != 1 || t < 1 || t > n_y || t %% 1 != 0) {
+    stop("`t` must be a single integer between 1 and the number of observations.")
+  }
+
+
+  # empty weights container for filtering and Smoothing
+
+  Wt  <- array(0, dim = c(m, dim_y, n_y))
+  WtT <- array(0, dim = c(m, dim_y, n_y))
 
   # computing observation weights for a given period
+
+  na_index <- is.na(t(yt))
 
   # loop over dimensions of yt
   for (col in 1:dim_y) {
     # loop over time
     for (s in n_y:1){
 
-      data1<-matrix(0,
-                    nrow=n_y,
-                    ncol=dim_y)
-
+      data1 <- matrix(0, nrow = n_y, ncol = dim_y)
       data1[s,col]<-1
       # restoring NAs
-      data1[is.na(t(yt))]<-NA
+      data1[na_index] <- NA
+
+      if(package == "FKF"){
 
       # Kalman Filter
-      kfw<-FKF::fkf(a0,
-              P0,
-              rep(0,dim(Tt)[1]),
-              rep(0,dim_y),
-              Tt,
-              Zt,
-              HHt,
-              GGt,
-              yt=t(data1))
+        kfw <- FKF::fkf(
+          a0 = a0,
+          P0 = P0,
+          dt = rep(0, m),
+          ct = rep(0, dim_y),
+          Tt = Tt,
+          Zt = Zt,
+          HHt = HHt,
+          GGt = GGt,
+          yt = t(data1)
+        )
+
       # Kalman Smoother
       kfws<-FKF::fks(kfw)
-
 
       # Storing results
       WtT[,col,s]=kfws$ahatt[,t]
       Wt[,col,s]=kfw$att[,t]
+
+      } else if( package == "KFAS"){
+
+        fit_kfas <- SSModel(
+          data1 ~ -1 +SSMcustom(
+            Z = Zt,
+            T = Tt,
+            R = diag(m),
+            Q = HHt,
+            a1 =a0,
+            P1 =P0,
+            P1inf = matrix(0, nrow = m, ncol = m)
+          ),
+          H = GGt
+        )
+
+        out_smooth <- KFS(fit_kfas, smoothing = "state")
+        out_filter <- KFS(fit_kfas, filtering = "state")
+
+        # Storing results
+        WtT[, col, s] <- out_smooth$alphahat[t, ]
+        Wt[, col, s]  <- out_filter$att[t, ]
+
+      }
 
     }
 

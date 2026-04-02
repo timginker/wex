@@ -2,34 +2,48 @@
 % Please edit documentation in R/wex.R
 \name{wex}
 \alias{wex}
-\title{Exact observation weights for the Kalman filter and smoother.}
+\title{Exact observation weights for the Kalman filter and smoother}
 \usage{
-wex(a0 = NULL, P0 = NULL, Tt, Zt, HHt, GGt, yt, t)
+wex(a0 = NULL, P0 = NULL, Tt, Zt, HHt, GGt, yt, t, package = "FKF")
 }
 \arguments{
-\item{a0}{A \code{vector} giving the initial value/estimation of the state variable. By default is set to zero.}
+\item{a0}{A numeric vector specifying the initial state estimate. Defaults to a vector of zeros.}
 
-\item{P0}{A \code{matrix} giving the variance of a0. By default is a diagonal matrix of 10^6.}
+\item{P0}{A numeric matrix specifying the covariance matrix of the initial state. Defaults to a diagonal matrix with large values (e.g., 1e6) on the diagonal.}
 
-\item{Tt}{An \code{array} giving the factor of the transition equation (see \bold{Details}).}
+\item{Tt}{An array specifying the transition matrix of the state equation (see \bold{Details}).}
 
-\item{Zt}{An \code{array} giving the factor of the measurement equation (see \bold{Details}).}
+\item{Zt}{Zt An array specifying the observation matrix of the measurement equation (see \bold{Details}).}
 
-\item{HHt}{An \code{array} giving the variance of the innovations of the transition equation (see \bold{Details}).}
+\item{HHt}{HHt An array specifying the covariance matrix of the state disturbances (see \bold{Details}).}
 
-\item{GGt}{An \code{array} giving the variance of the disturbances of the measurement equation (see \bold{Details}).}
+\item{GGt}{An array specifying the covariance matrix of the observation disturbances (see \bold{Details}).}
 
-\item{yt}{An \eqn{d \times n}{d * n} matrix, where d is the dimension and n is the number of observations. \code{matrix} containing the observations. “NA”-values are allowed (see \bold{Details}).}
+\item{yt}{An \eqn{d \times n}{d * n} matrix of observations, where d is the dimension and n is the number of observations.  Missing values (\code{NA}) are allowed.}
 
-\item{t}{An observation index for which the weights are returned.}
+\item{t}{An integer specifying the time index at which the observation weights are evaluated.}
+
+\item{package}{A character string indicating which backend to use (\code{"FKF"} or \code{"KFAS"}). Defaults to \code{"FKF"}.}
 }
 \value{
-Weight matrices for filtering (Wt) and smoothing (WtT).
+A list with two components:
+\describe{
+\item{\code{Wt}}{An array of filtering weights with dimensions
+\eqn{m \times d \times n}{m x d x n}, where \eqn{m} is the state
+dimension, \eqn{d} is the observation dimension, and \eqn{n} is the
+number of time points.}
+\item{\code{WtT}}{An array of smoothing weights with dimensions
+\eqn{m \times d \times n}{m x d x n}.}
+}
 }
 \description{
-This function computes the exact observation weights for the Kalman filter and smoother,
-as described by Koopman and Harvey (2003). The implementation of \code{wex} builds upon the
-existing \code{FKF} package (see: https://CRAN.R-project.org/package=FKF).
+Computes the exact observation weights for the Kalman filter and smoother,
+following Koopman and Harvey (2003). The implementation in \code{wex}
+builds on the functionality provided by the \code{FKF} and \code{KFAS}
+packages. These packages rely on different computational approaches:
+\code{FKF} uses routines from BLAS and LAPACK, whereas \code{KFAS} uses
+sequential processing, which allows the prediction error variance matrices
+to be singular.
 }
 \details{
 \strong{State space form}
@@ -60,6 +74,8 @@ t=50)
 \references{
 Koopman, S. J., & Harvey, A. (2003). Computing observation weights for
 signal extraction and filtering. \emph{Journal of Economic Dynamics and Control}, \bold{27}(7), 1317-1333.
+
+Helske, J. (2017). KFAS: Exponential family state space models in R. \emph{Journal of Statistical Software}, \bold{78}, 1-39.
 }
 \author{
 Tim Ginker
