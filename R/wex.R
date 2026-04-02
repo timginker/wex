@@ -11,31 +11,30 @@
 #' @param a0 A numeric vector specifying the initial state estimate. Defaults to a vector of zeros.
 #' @param P0 A numeric matrix specifying the covariance matrix of the initial state. Defaults to a diagonal matrix with large values (e.g., 1e6) on the diagonal.
 #' @param Tt An array specifying the transition matrix of the state equation (see \bold{Details}).
-#' @param Zt Zt An array specifying the observation matrix of the measurement equation (see \bold{Details}).
-#' @param HHt HHt An array specifying the covariance matrix of the state disturbances (see \bold{Details}).
+#' @param Zt An array specifying the observation matrix of the measurement equation (see \bold{Details}).
+#' @param HHt An array specifying the covariance matrix of the state disturbances (see \bold{Details}).
 #' @param GGt An array specifying the covariance matrix of the observation disturbances (see \bold{Details}).
 #' @param yt An \eqn{d \times n}{d * n} matrix of observations, where d is the dimension and n is the number of observations.  Missing values (\code{NA}) are allowed.
-#' @param t  An integer specifying the time index at which the observation weights are evaluated.
+#' @param t An integer specifying the time index at which the observation weights are evaluated.
 #' @param package A character string indicating which backend to use (\code{"FKF"} or \code{"KFAS"}). Defaults to \code{"FKF"}.
 #'
 #' @importFrom FKF fkf fks
 #' @importFrom KFAS KFS SSModel SSMcustom
 #'
-#' @returns A list with two components:
-#' \describe{
-#'   \item{\code{Wt}}{An array of filtering weights with dimensions
-#'   \eqn{m \times d \times n}{m x d x n}, where \eqn{m} is the state
-#'   dimension, \eqn{d} is the observation dimension, and \eqn{n} is the
-#'   number of time points.}
-#'   \item{\code{WtT}}{An array of smoothing weights with dimensions
-#'   \eqn{m \times d \times n}{m x d x n}.}
+#' @return A list with two components:
+#' \itemize{
+#'   \item \code{Wt}: An array of filtering weights with dimensions \eqn{m \times d \times n}.
+#'   \item \code{WtT}: An array of smoothing weights with dimensions \eqn{m \times d \times n}.
 #' }
 #'
 #'
-#' @references Koopman, S. J., & Harvey, A. (2003). Computing observation weights for
-#'  signal extraction and filtering. \emph{Journal of Economic Dynamics and Control}, \bold{27}(7), 1317-1333.
+#' @references
+#' Koopman, S. J., and Harvey, A. (2003). Computing observation weights for
+#' signal extraction and filtering. \emph{Journal of Economic Dynamics and Control},
+#' \bold{27}(7), 1317-1333.
 #'
-#'  Helske, J. (2017). KFAS: Exponential family state space models in R. \emph{Journal of Statistical Software}, \bold{78}, 1-39.
+#' Helske, J. (2017). KFAS: Exponential family state space models in R.
+#' \emph{Journal of Statistical Software}, \bold{78}, 1-39.
 #'
 #' @author Tim Ginker
 #'
@@ -46,8 +45,8 @@
 #'
 #' \strong{State space form}
 #'
-#' \deqn{\alpha_{t+1} = T_t \alpha_t + H_t \eta_t,}
-#' \deqn{y_t = Z_t \alpha_t + G_t \epsilon_t,}
+#' \deqn{\alpha_{t+1} = T_t \alpha_t + H_t \eta_t}
+#' \deqn{y_t = Z_t \alpha_t + G_t \epsilon_t}
 #'
 #' where \eqn{y_t} represents the observed data (possibly with NA's),
 #' and \eqn{\alpha_t} is the state vector.

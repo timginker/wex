@@ -13,9 +13,9 @@ wex(a0 = NULL, P0 = NULL, Tt, Zt, HHt, GGt, yt, t, package = "FKF")
 
 \item{Tt}{An array specifying the transition matrix of the state equation (see \bold{Details}).}
 
-\item{Zt}{Zt An array specifying the observation matrix of the measurement equation (see \bold{Details}).}
+\item{Zt}{An array specifying the observation matrix of the measurement equation (see \bold{Details}).}
 
-\item{HHt}{HHt An array specifying the covariance matrix of the state disturbances (see \bold{Details}).}
+\item{HHt}{An array specifying the covariance matrix of the state disturbances (see \bold{Details}).}
 
 \item{GGt}{An array specifying the covariance matrix of the observation disturbances (see \bold{Details}).}
 
@@ -27,13 +27,9 @@ wex(a0 = NULL, P0 = NULL, Tt, Zt, HHt, GGt, yt, t, package = "FKF")
 }
 \value{
 A list with two components:
-\describe{
-\item{\code{Wt}}{An array of filtering weights with dimensions
-\eqn{m \times d \times n}{m x d x n}, where \eqn{m} is the state
-dimension, \eqn{d} is the observation dimension, and \eqn{n} is the
-number of time points.}
-\item{\code{WtT}}{An array of smoothing weights with dimensions
-\eqn{m \times d \times n}{m x d x n}.}
+\itemize{
+\item \code{Wt}: An array of filtering weights with dimensions \eqn{m \times d \times n}.
+\item \code{WtT}: An array of smoothing weights with dimensions \eqn{m \times d \times n}.
 }
 }
 \description{
@@ -48,8 +44,8 @@ to be singular.
 \details{
 \strong{State space form}
 
-\deqn{\alpha_{t+1} = T_t \alpha_t + H_t \eta_t,}
-\deqn{y_t = Z_t \alpha_t + G_t \epsilon_t,}
+\deqn{\alpha_{t+1} = T_t \alpha_t + H_t \eta_t}
+\deqn{y_t = Z_t \alpha_t + G_t \epsilon_t}
 
 where \eqn{y_t} represents the observed data (possibly with NA's),
 and \eqn{\alpha_t} is the state vector.
@@ -72,10 +68,12 @@ t=50)
 
 }
 \references{
-Koopman, S. J., & Harvey, A. (2003). Computing observation weights for
-signal extraction and filtering. \emph{Journal of Economic Dynamics and Control}, \bold{27}(7), 1317-1333.
+Koopman, S. J., and Harvey, A. (2003). Computing observation weights for
+signal extraction and filtering. \emph{Journal of Economic Dynamics and Control},
+\bold{27}(7), 1317-1333.
 
-Helske, J. (2017). KFAS: Exponential family state space models in R. \emph{Journal of Statistical Software}, \bold{78}, 1-39.
+Helske, J. (2017). KFAS: Exponential family state space models in R.
+\emph{Journal of Statistical Software}, \bold{78}, 1-39.
 }
 \author{
 Tim Ginker
