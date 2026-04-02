@@ -28,8 +28,9 @@ wex(a0 = NULL, P0 = NULL, Tt, Zt, HHt, GGt, yt, t, package = "FKF")
 \value{
 A list with two components:
 \itemize{
-\item \code{Wt}: An array of filtering weights with dimensions \eqn{m \times d \times n}.
-\item \code{WtT}: An array of smoothing weights with dimensions \eqn{m \times d \times n}.
+\item \code{Wt}: An array of filtering weights with dimensions \eqn{m \times d \times n}, , where \eqn{m} is the state
+dimension, \eqn{d} is the observation dimension, and \eqn{n} is the number of time points.
+\item \code{WtT}: An array of smoothing weights with the same dimensions as \code{Wt}.
 }
 }
 \description{
