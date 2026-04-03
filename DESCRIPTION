@@ -12,10 +12,12 @@ Authors@R: c(
     )
   )
 Maintainer: Tim Ginker <timginker@gmail.com>    
-Description: Computes the exact observation weights for the Kalman filter and smoother, based on the method described in Koopman and Harvey (2003) <www.sciencedirect.com/science/article/pii/S0165188902000611>.
-    The package supports in-depth exploration of state-space models, enabling researchers and practitioners to extract meaningful insights from time series data.
-    This functionality is especially valuable in dynamic factor models, where the computed weights can be used to decompose the contributions of individual variables to the latent factors.
-    See the README file for examples.
+Description: Computes exact observation weights for the Kalman filter and smoother, following Koopman and Harvey (2003) <www.sciencedirect.com/science/article/pii/S0165188902000611>.
+    The package provides tools for analyzing linear Gaussian state-space models,
+    allowing users to quantify the contribution of individual observations to
+    filtered and smoothed state estimates. These weights can be used for
+    interpretation, decomposition, and diagnostic analysis in time series models,
+    including applications such as dynamic factor models. See the README for examples.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
