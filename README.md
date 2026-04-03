@@ -49,11 +49,15 @@ The resulting estimates are shown in the plot below.
 
 To illustrate the weight decomposition, consider the estimate of the
 local level at time $t = 50$. Koopman and Harvey (2003) showed that the
-smoothed estimate can be written as
+smoothed estimate $\alpha_{t \mid T}$ can be expressed as
 
 $$
-\alpha _{t|T}=\sum_{j=1}^{T}w_{j}(\alpha _{t|T})y_{j}.
+\alpha_{t \mid T} = \sum_{j=1}^{T} w_j(\alpha_{t \mid T}) y_j,
 $$
+
+where $w_j(\alpha_{t \mid T})$ denotes the observation weight assigned
+to $y_j$. Missing values (`NA`) may be present in the data; in such
+cases, the corresponding weights are set to zero.
 
 Similarly, the filtered estimate can be written as
 
@@ -166,14 +170,13 @@ variables have been log-differenced, when necessary, to achieve
 stationarity. We assume a single latent factor following an AR(1)
 process.
 
-The standardized data series are shown in the plot below.
-
-<img src="man/figures/README-unnamed-chunk-8-1.png" alt="" width="100%" />
-
-We now use the `wex` function to decompose the final estimate of the
-latent factor into contributions from each observed variable.
+The standardized data series and the corresponding smoothed factor
+estimate are shown in the plot below.
 
 ``` r
+# Use the indicators dataset from wex
+df <- scale(wex::indicators[,-1])
+
 # Define the state-space matrices
 Zt <- matrix(c(0.37873307, 0.37438154, 0.37767322,
                  0.02433999, 0.36020426, 0.23031769,
@@ -199,6 +202,44 @@ GGt <- matrix(c(
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0.1789897
 ), nrow = 10, ncol = 10, byrow = TRUE)
 
+# Computing the smoothed values of the latent factor
+
+fit_kf <- fkf(a0 = 0, 
+              P0 = diag(1e6, 1),
+              dt = matrix(0,1),
+              ct = rep(0,ncol(df)),
+              Tt = Tt,
+              Zt = Zt,
+              HHt = HHt,
+              GGt = GGt,
+              yt = t(df))
+
+fit_ks <- fks(fit_kf)
+
+
+df.ts <- ts(df,start=c(2000,1),frequency = 12)
+f_t <- ts(fit_ks$ahatt[1,])
+tsp(f_t) <- tsp(df.ts)
+
+
+plot(df.ts,plot.type = "single",col="darkgrey",xlab="Year",ylab="")
+abline(h=0,lty=1)
+lines(f_t, col="blue")
+legend(
+  "bottomleft",
+  legend = c("Standardized series", "Smoothed factor estimate"),
+  lwd = c(1, 1),
+  col = c("darkgrey", "blue"),
+  bty = "n"
+)
+```
+
+<img src="man/figures/README-unnamed-chunk-8-1.png" alt="" width="100%" />
+
+We now use the `wex` function to decompose the final estimate of the
+latent factor into contributions from each observed variable.
+
+``` r
 # Extract weights for the final observation
 wts <- wex(Tt=Tt,
         Zt=Zt,
