@@ -91,6 +91,17 @@ wex<-function(a0=NULL,
   n_y   <- ncol(yt)
   m     <- dim(Tt)[1]
 
+  if(package == "FKF"){
+    dt = rep(0, m)
+    ct = rep(0, dim_y)
+  }
+
+  if(package == "KFAS"){
+    P1inf = matrix(0, nrow = m, ncol = m)
+    R = diag(m)
+  }
+
+
   # Setting a0 and P0
 
   if (is.null(a0)) {
@@ -124,13 +135,15 @@ wex<-function(a0=NULL,
   # computing observation weights for a given period
 
   na_index <- is.na(t(yt))
+  data1 <- matrix(0, nrow = n_y, ncol = dim_y)
+
 
   # loop over dimensions of yt
   for (col in 1:dim_y) {
     # loop over time
     for (s in n_y:1){
 
-      data1 <- matrix(0, nrow = n_y, ncol = dim_y)
+      old_val <- data1[s, col]
       data1[s,col]<-1
       # restoring NAs
       data1[na_index] <- NA
@@ -141,8 +154,8 @@ wex<-function(a0=NULL,
         kfw <- FKF::fkf(
           a0 = a0,
           P0 = P0,
-          dt = rep(0, m),
-          ct = rep(0, dim_y),
+          dt = dt,
+          ct = ct,
           Tt = Tt,
           Zt = Zt,
           HHt = HHt,
@@ -152,7 +165,6 @@ wex<-function(a0=NULL,
 
       # Kalman Smoother
       kfws<-FKF::fks(kfw)
-
       # Storing results
       WtT[,col,s]=kfws$ahatt[,t]
       Wt[,col,s]=kfw$att[,t]
@@ -163,21 +175,25 @@ wex<-function(a0=NULL,
           data1 ~ -1 +SSMcustom(
             Z = Zt,
             T = Tt,
-            R = diag(m),
+            R = R,
             Q = HHt,
             a1 =a0,
             P1 =P0,
-            P1inf = matrix(0, nrow = m, ncol = m)
+            P1inf = P1inf
           ),
           H = GGt
         )
 
-        out_smooth <- KFS(fit_kfas, smoothing = "state")
-        out_filter <- KFS(fit_kfas, filtering = "state")
+        out <- KFAS::KFS(
+          fit_kfas,
+          filtering = c("state", "mean"),
+          smoothing = c("state", "mean")
+        )
 
         # Storing results
-        WtT[, col, s] <- out_smooth$alphahat[t, ]
-        Wt[, col, s]  <- out_filter$att[t, ]
+        WtT[, col, s] <- out$alphahat[t, ]
+        Wt[, col, s]  <- out$att[t, ]
+        data1[s, col] <- old_val
 
       }
 
