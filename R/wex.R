@@ -91,16 +91,16 @@ wex<-function(a0=NULL,
   n_y   <- ncol(yt)
   m     <- dim(Tt)[1]
 
-  if(package == "FKF"){
-    dt = rep(0, m)
-    ct = rep(0, dim_y)
+  if(package=="FKF"){
+    dt0= rep(0, m)
+    ct0 = rep(0, dim_y)
   }
 
-  if(package == "KFAS"){
-    P1inf = matrix(0, nrow = m, ncol = m)
-    R = diag(m)
-  }
+  if(package=="KFAS"){
+    R0 = diag(m)
+    P1inf0 = matrix(0, nrow = m, ncol = m)
 
+  }
 
   # Setting a0 and P0
 
@@ -137,13 +137,11 @@ wex<-function(a0=NULL,
   na_index <- is.na(t(yt))
   data1 <- matrix(0, nrow = n_y, ncol = dim_y)
 
-
   # loop over dimensions of yt
   for (col in 1:dim_y) {
     # loop over time
     for (s in n_y:1){
 
-      old_val <- data1[s, col]
       data1[s,col]<-1
       # restoring NAs
       data1[na_index] <- NA
@@ -154,8 +152,8 @@ wex<-function(a0=NULL,
         kfw <- FKF::fkf(
           a0 = a0,
           P0 = P0,
-          dt = dt,
-          ct = ct,
+          dt = dt0,
+          ct = ct0,
           Tt = Tt,
           Zt = Zt,
           HHt = HHt,
@@ -165,9 +163,11 @@ wex<-function(a0=NULL,
 
       # Kalman Smoother
       kfws<-FKF::fks(kfw)
+
       # Storing results
       WtT[,col,s]=kfws$ahatt[,t]
       Wt[,col,s]=kfw$att[,t]
+      data1[s,col]<-0
 
       } else if( package == "KFAS"){
 
@@ -175,25 +175,25 @@ wex<-function(a0=NULL,
           data1 ~ -1 +SSMcustom(
             Z = Zt,
             T = Tt,
-            R = R,
+            R = R0,
             Q = HHt,
             a1 =a0,
             P1 =P0,
-            P1inf = P1inf
+            P1inf = P1inf0
           ),
           H = GGt
         )
 
         out <- KFAS::KFS(
           fit_kfas,
-          filtering = c("state", "mean"),
-          smoothing = c("state", "mean")
+          filtering = "state",
+          smoothing = "state"
         )
 
-        # Storing results
         WtT[, col, s] <- out$alphahat[t, ]
         Wt[, col, s]  <- out$att[t, ]
-        data1[s, col] <- old_val
+
+        data1[s,col]<-0
 
       }
 
