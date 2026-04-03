@@ -22,8 +22,14 @@ contributions from observed variables (see Example 2 below).
 
 ## Installation
 
-You can install the development version of wex from
-[GitHub](https://github.com/) with:
+The stable version of `wex` can be installed from CRAN:
+
+``` r
+install.packages("wex")
+```
+
+The development version of `wex` can be installed from
+[GitHub](https://github.com/):
 
 ``` r
 # install.packages("devtools")
@@ -32,30 +38,32 @@ devtools::install_github("timginker/wex")
 
 ## Example 1: Local level model
 
-In this illustrative example, we fit the local level model to the Nile
-dataset and compute the associated smoothed and filtered values.
+In this illustrative example, we fit a local level model to the `Nile`
+data and compute the corresponding filtered and smoothed state
+estimates. We then extract the observation weights and use them to
+reconstruct these estimates from the observed data.
 
-The resulting estimates are presented in the plot below:
+The resulting estimates are shown in the plot below.
 
 <img src="man/figures/README-unnamed-chunk-3-1.png" alt="" width="100%" />
-Now, w.l.o.g., let’s consider the 50th value of the estimated local
-level. Koopman and Harvey (2003) showed that the smoothed estimates can
-be represented as:
+
+To illustrate the weight decomposition, consider the estimate of the
+local level at time $t = 50$. Koopman and Harvey (2003) showed that the
+smoothed estimate can be written as
 
 $$
 \alpha _{t|T}=\sum_{j=1}^{T}w_{j}(\alpha _{t|T})y_{j}.
 $$
 
-Similarly, the filtered estimated can be computed as:
+Similarly, the filtered estimate can be written as
 
 $$
 \alpha _{t|t}=\sum_{j=1}^{t}w_{j}(\alpha _{t|t})y_{j}.
 $$
 
-We can compute the weight of each observation using the `wex` function,
-and compare the local level estimates obtained from the weighted average
-of the observed data with the associated estimates obtained from the
-Kalman filter and smoother.
+We can compute the weight assigned to each observation using the `wex`
+function and compare the resulting weighted averages with the
+corresponding estimates obtained from the Kalman filter and smoother.
 
 ``` r
 wts <- wex(Tt=matrix(1),
@@ -66,7 +74,7 @@ wts <- wex(Tt=matrix(1),
         t=50)
 ```
 
-We can also visualize the weights assigned to each observation:
+We can also visualize the weights assigned to each observation.
 
 ``` r
 par(mfrow = c(2, 1),
@@ -94,74 +102,79 @@ plot(
 
 <img src="man/figures/README-unnamed-chunk-5-1.png" alt="" width="100%" />
 
-It is also easy to verify the identity between the smoothed and filtered
-levels obtained from the Kalman filter and the corresponding estimates
-computed using the weights.
+Finally, we verify that the filtered and smoothed estimates obtained
+from the Kalman filter coincide with those computed using the
+observation weights.
 
 ``` r
-cat("\n Smoothed level computed using the weights = ",
-    sum(y*as.numeric(wts$WtT),na.rm = T),
-    " \n Smoothed level from the Kalman Filter = ",fit_ks$ahatt[50])
+cat(
+  "\nSmoothed level computed using the weights = ",
+  sum(y * as.numeric(wts$WtT), na.rm = TRUE),
+  "\nSmoothed level from the Kalman smoother = ",
+  fit_ks$ahatt[50]
+)
 #> 
-#>  Smoothed level computed using the weights =  834.9828  
-#>  Smoothed level from the Kalman Filter =  834.9828
+#> Smoothed level computed using the weights =  834.9828 
+#> Smoothed level from the Kalman smoother =  834.9828
 ```
 
 ``` r
-cat("\n Filtered level computed using the weights = ",
-    sum(y*as.numeric(wts$Wt),na.rm = T),
-    " \n Filtered level from the Kalman Filter = ",fit_kf$att[50])
+cat(
+  "\nFiltered level computed using the weights = ",
+  sum(y * as.numeric(wts$Wt), na.rm = TRUE),
+  "\nFiltered level from the Kalman filter = ",
+  fit_kf$att[50]
+)
 #> 
-#>  Filtered level computed using the weights =  849.307  
-#>  Filtered level from the Kalman Filter =  849.307
+#> Filtered level computed using the weights =  849.307 
+#> Filtered level from the Kalman filter =  849.307
 ```
 
-## Example 2: Computing Variable Contribution in a Dynamic Factor Model
+## Example 2: Decomposing Variable Contributions in a Dynamic Factor Model
 
-In this example we show how to compute observation weights for a Dynamic
-Factor Model (DFM) which are then used to decompose the latent factor
-into the contribution of each variable.
+In this example, we show how to compute observation weights in a dynamic
+factor model (DFM) and use them to decompose the latent factor into
+contributions from individual variables.
 
-More formally, let $x_{t}=(x_{1,t},x_{2,t},...,x_{n,t})^{\prime}$ with
-$t =1,2,...,T$ be a vector of $n$ monthly series that have been
-transformed to become stationary and standardized. A dynamic factor
-model (DFM) assumes that it is possible to decompose $x_{t}$ into two
+More formally, let $x_t = (x_{1,t}, x_{2,t}, \dots, x_{n,t})^{\prime}$,
+for $t = 1, 2, \dots, T$, denote a vector of $n$ monthly series that
+have been transformed to achieve stationarity and standardized. A
+dynamic factor model assumes that $x_t$ can be decomposed into two
 unobserved orthogonal components representing common and idiosyncratic
-factors. The model is specified as follows:
+factors. The model is given by
 
 $$
-x_{t}=\Lambda F_{t}+\varepsilon_{t}, \hspace{2pt} \varepsilon_{t}\sim N(0,R),
+x_t = \Lambda F_t + \varepsilon_t, \hspace{2pt} \varepsilon_t \sim N(0, R),
 $$
 
-where $F_{t}$ is an $(r \times 1)$ vector of unobserved common factors,
-$\Lambda$ is an $(n \times r)$ matrix of their loadings, and
-$\varepsilon_{t}$ is an $(n \times 1)$ vector of the idiosyncratic
-components. The factors are assumed to have the following stationary
-VAR(p) representation:
+where $F_t$ is an $(r \times 1)$ vector of unobserved common factors,
+$\Lambda$ is an $(n \times r)$ matrix of factor loadings, and
+$\varepsilon_t$ is an $(n \times 1)$ vector of idiosyncratic components.
+The common factors are assumed to follow the stationary VAR($p$) process
 
 $$
-F_{t}=\sum_{s=1}^{p}\Phi _{s}F_{t-s}+u_{t},\hspace{2pt} u_{t}\sim N(0,Q)
+F_t = \sum_{s=1}^{p} \Phi_s F_{t-s} + u_t, \hspace{2pt} u_t \sim N(0, Q),
 $$
 
-where $\Phi_{s}$ are $(r \times r)$ matrices of autoregressive
-coefficients. The related inference and forecast procedures can be
-carried out using the standard Kalman filter techniques.
+where $\Phi_s$ are $(r \times r)$ matrices of autoregressive
+coefficients. Estimation and signal extraction can then be carried out
+using standard Kalman filtering and smoothing methods.
 
 In this illustrative example, we use a dataset containing 10 monthly
-economic indicators covering the period from January 2000 to November
-2021. All variables have been log-differenced, when necessary, to
-achieve stationarity. We assume that there is a single laten factor that
-follows an AR(1) process.
+economic indicators spanning January 2000 to November 2021. All
+variables have been log-differenced, when necessary, to achieve
+stationarity. We assume a single latent factor following an AR(1)
+process.
 
-The normalized data series are summarized in the plot below:
+The standardized data series are shown in the plot below.
 
 <img src="man/figures/README-unnamed-chunk-8-1.png" alt="" width="100%" />
 
-Below, we use the `wex` function to decompose the last value of the
-latent factor into a contribution of each variable.
+We now use the `wex` function to decompose the final estimate of the
+latent factor into contributions from each observed variable.
 
 ``` r
-# defining the stat-space matrices
+# Define the state-space matrices
 Zt <- matrix(c(0.37873307, 0.37438154, 0.37767322,
                  0.02433999, 0.36020426, 0.23031769,
                  0.36584474, 0.35066644, 0.33420247,
@@ -186,30 +199,24 @@ GGt <- matrix(c(
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0.1789897
 ), nrow = 10, ncol = 10, byrow = TRUE)
 
-# Extracting weights for the last obseravtion
+# Extract weights for the final observation
 wts <- wex(Tt=Tt,
         Zt=Zt,
         HHt = HHt,
         GGt = GGt,
         yt = t(df),
         t=nrow(df))
-# Computing contributions
+# Compute contributions
 
-ctr <- matrix(0,nrow=nrow(df),ncol=ncol(df))
+# Extract smoothing weights corresponding to the target state
+sweights <- t(wts$WtT[1, , ])
+colnames(sweights) <- colnames(df)
 
-for (i in 1:nrow(df)) {
-  
-  ctr[i,]=as.numeric(wts$WtT[,,i]*df[i,])
-  
-}
-
-ctr <- data.frame(ctr)
-colnames(ctr) <-colnames(df)
-
-contributions <- colSums(ctr,na.rm=T)
+# Compute variable contributions as weighted sums of the observed data
+contributions <- colSums(sweights * df, na.rm = TRUE)
 ```
 
-The contributons are summarized in the Table below:
+The contributions are summarized in the Table below:
 
 <table class=" lightable-classic" style="font-family: Cambria; width: auto !important; margin-left: auto; margin-right: auto;">
 
