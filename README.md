@@ -5,16 +5,20 @@
 
 <!-- badges: start -->
 
+[![](https://www.r-pkg.org/badges/version/wex?color=green)](https://cran.r-project.org/package=wex)
+[![](https://img.shields.io/github/last-commit/timginker/wex.svg)](https://github.com/timginker/wex/commits/master)
+[![](http://cranlogs.r-pkg.org/badges/grand-total/wex)](https://cran.r-project.org/package=wex)
 <!-- badges: end -->
 
-`wex` is an R package designed to compute the exact observation weights
-for the Kalman filter and smoother using the method described in Koopman
-and Harvey (2003). It offers an in-depth exploration of state-space
-models, enabling researchers and practitioners to extract valuable
-insights from their time series data. This functionality is particularly
-useful in dynamic factor models, where the weights can be employed to
-decompose the contributions of individual variables to the latent
-factors (see Example 2 below).
+`wex` is an R package for computing exact observation weights for the
+Kalman filter and smoother, following Koopman and Harvey (2003). The
+package provides tools for analyzing linear Gaussian state-space models
+by quantifying how individual observations contribute to filtered and
+smoothed state estimates.
+
+These weights are particularly useful in applications such as dynamic
+factor models, where they can be used to decompose latent factors into
+contributions from observed variables (see Example 2 below).
 
 ## Installation
 
@@ -392,11 +396,25 @@ Total
 
 </table>
 
+## Implementation
+
+The package supports two computational backends:
+
+- **FKF**: fast and efficient, but requires non-singular prediction
+  error covariance matrices.
+- **KFAS**: more flexible, allowing for singular prediction error
+  covariance matrices.
+
 # References
 
-Koopman, S. J., & Harvey, A. (2003). Computing observation weights for
-signal extraction and filtering. Journal of Economic Dynamics and
-Control, 27(7), 1317-1333.
+- Koopman, S. J., and Harvey, A. C. (2003). Computing observation
+  weights for signal extraction and filtering. *Journal of Economic
+  Dynamics and Control*, 27(7), 1317–1333.
+  <https://doi.org/10.1016/S0165-1889(02)00061-1>
+
+- Helske, J. (2017). KFAS: Exponential Family State Space Models in R.
+  *Journal of Statistical Software*, 78(10), 1–39.
+  <https://doi.org/10.18637/jss.v078.i10>
 
 # Disclaimer
 
