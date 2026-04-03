@@ -19,9 +19,9 @@ wex(a0 = NULL, P0 = NULL, Tt, Zt, HHt, GGt, yt, t, package = "FKF")
 
 \item{GGt}{An array specifying the covariance matrix of the observation disturbances (see \bold{Details}).}
 
-\item{yt}{An \eqn{d \times n}{d * n} matrix of observations, where d is the dimension and n is the number of observations.  Missing values (\code{NA}) are allowed.}
+\item{yt}{An \eqn{d \times n}{d * n} matrix of observations, where rows correspond to variables and columns to time points. Missing values (\code{NA}) are allowed.}
 
-\item{t}{An integer specifying the time index at which the observation weights are evaluated.}
+\item{t}{An integer specifying the time index for which the observation weights are evaluated.}
 
 \item{package}{A character string indicating which backend to use (\code{"FKF"} or \code{"KFAS"}). Defaults to \code{"FKF"}.}
 }
@@ -45,8 +45,8 @@ to be singular.
 \details{
 \strong{State space form}
 
-\deqn{\alpha_{t+1} = T_t \alpha_t + H_t \eta_t}
-\deqn{y_t = Z_t \alpha_t + G_t \epsilon_t}
+\deqn{\alpha_{t+1} = T_t \alpha_t + H_t \eta_t,}
+\deqn{y_t = Z_t \alpha_t + G_t \epsilon_t,}
 
 where \eqn{y_t} represents the observed data (possibly with NA's),
 and \eqn{\alpha_t} is the state vector.
@@ -62,8 +62,6 @@ HHt = matrix(1385.066),
 GGt = matrix(15124.13),
 yt = t(y),
 t=50)
-
-
 
 
 

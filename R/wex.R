@@ -14,8 +14,8 @@
 #' @param Zt An array specifying the observation matrix of the measurement equation (see \bold{Details}).
 #' @param HHt An array specifying the covariance matrix of the state disturbances (see \bold{Details}).
 #' @param GGt An array specifying the covariance matrix of the observation disturbances (see \bold{Details}).
-#' @param yt An \eqn{d \times n}{d * n} matrix of observations, where d is the dimension and n is the number of observations.  Missing values (\code{NA}) are allowed.
-#' @param t An integer specifying the time index at which the observation weights are evaluated.
+#' @param yt An \eqn{d \times n}{d * n} matrix of observations, where rows correspond to variables and columns to time points. Missing values (\code{NA}) are allowed.
+#' @param t An integer specifying the time index for which the observation weights are evaluated.
 #' @param package A character string indicating which backend to use (\code{"FKF"} or \code{"KFAS"}). Defaults to \code{"FKF"}.
 #'
 #' @importFrom FKF fkf fks
@@ -46,8 +46,8 @@
 #'
 #' \strong{State space form}
 #'
-#' \deqn{\alpha_{t+1} = T_t \alpha_t + H_t \eta_t}
-#' \deqn{y_t = Z_t \alpha_t + G_t \epsilon_t}
+#' \deqn{\alpha_{t+1} = T_t \alpha_t + H_t \eta_t,}
+#' \deqn{y_t = Z_t \alpha_t + G_t \epsilon_t,}
 #'
 #' where \eqn{y_t} represents the observed data (possibly with NA's),
 #' and \eqn{\alpha_t} is the state vector.
@@ -63,8 +63,6 @@
 #' GGt = matrix(15124.13),
 #' yt = t(y),
 #' t=50)
-#'
-#'
 #'
 #'
 #'
@@ -90,17 +88,6 @@ wex<-function(a0=NULL,
   dim_y <- nrow(yt)
   n_y   <- ncol(yt)
   m     <- dim(Tt)[1]
-
-  if(package=="FKF"){
-    dt0= rep(0, m)
-    ct0 = rep(0, dim_y)
-  }
-
-  if(package=="KFAS"){
-    R0 = diag(m)
-    P1inf0 = matrix(0, nrow = m, ncol = m)
-
-  }
 
   # Setting a0 and P0
 
@@ -138,72 +125,95 @@ wex<-function(a0=NULL,
   data1 <- matrix(0, nrow = n_y, ncol = dim_y)
 
   # loop over dimensions of yt
-  for (col in 1:dim_y) {
-    # loop over time
-    for (s in n_y:1){
+  if(package == "FKF"){
 
-      data1[s,col]<-1
-      # restoring NAs
-      data1[na_index] <- NA
+    dt0 <- rep(0, m)
+    ct0 <- rep(0, dim_y)
+    data1 <- t(data1)
+    na_index <- is.na(yt)
 
-      if(package == "FKF"){
+    for (col in 1:dim_y) {
+      # loop over time
+      for (s in n_y:1){
 
-      # Kalman Filter
+        data1[col,s]<-1
+        # restoring NAs
+        data1[na_index] <- NA
+
+        # Kalman Filter
         kfw <- FKF::fkf(
-          a0 = a0,
-          P0 = P0,
-          dt = dt0,
-          ct = ct0,
-          Tt = Tt,
-          Zt = Zt,
-          HHt = HHt,
-          GGt = GGt,
-          yt = t(data1)
-        )
+            a0 = a0,
+            P0 = P0,
+            dt = dt0,
+            ct = ct0,
+            Tt = Tt,
+            Zt = Zt,
+            HHt = HHt,
+            GGt = GGt,
+            yt = data1
+          )
 
-      # Kalman Smoother
-      kfws<-FKF::fks(kfw)
+          # Kalman Smoother
+          kfws<-FKF::fks(kfw)
 
-      # Storing results
-      WtT[,col,s]=kfws$ahatt[,t]
-      Wt[,col,s]=kfw$att[,t]
-      data1[s,col]<-0
+          # Storing results
+          WtT[,col,s]=kfws$ahatt[,t]
+          Wt[,col,s]=kfw$att[,t]
+          data1[col,s]<-0
 
-      } else if( package == "KFAS"){
+
+
+      }
+
+
+    }
+
+
+  } else if( package == "KFAS"){
+
+
+    R0 <- diag(m)
+    P1inf0 <- matrix(0, nrow = m, ncol = m)
+
+    for (col in 1:dim_y) {
+      # loop over time
+      for (s in n_y:1){
+
+        data1[s,col]<-1
+        # restoring NAs
+        data1[na_index] <- NA
 
         fit_kfas <- SSModel(
-          data1 ~ -1 +SSMcustom(
-            Z = Zt,
-            T = Tt,
-            R = R0,
-            Q = HHt,
-            a1 =a0,
-            P1 =P0,
-            P1inf = P1inf0
-          ),
-          H = GGt
-        )
+            data1 ~ -1 +SSMcustom(
+              Z = Zt,
+              T = Tt,
+              R = R0,
+              Q = HHt,
+              a1 =a0,
+              P1 =P0,
+              P1inf = P1inf0
+            ),
+            H = GGt
+          )
 
-        out <- KFAS::KFS(
-          fit_kfas,
-          filtering = "state",
-          smoothing = "state"
-        )
+          out <- KFAS::KFS(
+            fit_kfas,
+            filtering = "state",
+            smoothing = "state"
+          )
 
-        WtT[, col, s] <- out$alphahat[t, ]
-        Wt[, col, s]  <- out$att[t, ]
+          WtT[, col, s] <- out$alphahat[t, ]
+          Wt[, col, s]  <- out$att[t, ]
 
-        data1[s,col]<-0
+          data1[s,col]<-0
 
       }
 
     }
 
-
   }
 
   return(list(Wt=Wt,
               WtT=WtT))
-
 
 }
